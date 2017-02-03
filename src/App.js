@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { TodoForm, TodoList } from './components/todo'
-import { addTodo, findById, generateId, removeTodo, toggleTodo, updateTodo } from './lib/todoHelpers'
+import { Footer, TodoForm, TodoList } from './components/todo'
+import { addTodo, findById, filterTodos, generateId, removeTodo, toggleTodo, updateTodo } from './lib/todoHelpers'
 import { partial, pipe } from './lib/utils'
 
 class App extends Component {
@@ -14,6 +14,10 @@ class App extends Component {
     ],
     currentTodo: '',
     errorMessage: ''
+  }
+
+  static contextTypes = {
+    route: React.PropTypes.string
   }
 
   handleRemove = (id, event) => {
@@ -59,6 +63,7 @@ class App extends Component {
 
   render () {
     const submitHandler = this.state.currentTodo ? this.handleSubmit : this.handleEmptySubmit
+    const todos = filterTodos(this.context.route, this.state.todos)
     return (
       <div className="App">
         <div className="App-header">
@@ -74,7 +79,8 @@ class App extends Component {
           <TodoList
             handleToggle={this.handleToggle}
             handleRemove={this.handleRemove}
-            todos={this.state.todos} />
+            todos={todos} />
+          <Footer />
         </div>
       </div>
     );
